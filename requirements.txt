@@ -5,7 +5,9 @@ coveralls==1.2.0
 click==6.7
 cryptography==1.7.2
 Flask==0.12.2
+Flask-Migrate==2.1.0
 flask-restplus==0.10.1
+Flask-Script==2.0.5
 Flask-SQLAlchemy==2.2
 gunicorn==19.7.1
 idna==2.6
