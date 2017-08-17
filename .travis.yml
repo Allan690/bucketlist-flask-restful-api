@@ -4,11 +4,6 @@ python:
   - "3.6"
 install: "pip install -r requirements.txt"
 script:
-  - python manage.py db init
-  - python manage.py db migrate
-  - python manage.py db upgrade
-  - python manage.py db upgrade
   - python -m unittest tests/test_user_authentication.py
   - python -m unittest tests/test_bucketlist_item_operations.py
   - python -m unittest tests/test_bucketlist_operations.py
-
