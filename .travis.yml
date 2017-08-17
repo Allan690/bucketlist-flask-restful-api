@@ -3,8 +3,6 @@ python:
   - "3.6"
 install: "pip install -r requirements.txt"
 script:
-  - python -m unittest tests/test_user_authentication.py
-  - python -m unittest tests/test_bucketlist_item_operations.py
-  - python -m unittest tests/test_bucketlist_operations.py
+  - coverage run -m unittest discover && coverage report
 after_success:
   coveralls
