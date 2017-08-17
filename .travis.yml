@@ -6,3 +6,5 @@ script:
   - python -m unittest tests/test_user_authentication.py
   - python -m unittest tests/test_bucketlist_item_operations.py
   - python -m unittest tests/test_bucketlist_operations.py
+after_success:
+  coveralls
