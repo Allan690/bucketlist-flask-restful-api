@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/iankigen/Bucketlist-Flask-RESTful-API.svg?branch=master)](https://travis-ci.org/iankigen/Bucketlist-Flask-RESTful-API)
 
+[![Coverage Status](https://coveralls.io/repos/github/iankigen/Bucketlist-Flask-RESTful-API/badge.svg?branch=master)](https://coveralls.io/github/iankigen/Bucketlist-Flask-RESTful-API?branch=master)
+
 A Flask RESTful API implementing Token Based Authentication, pagination and searching with Endpoints that enable users to:
 
 - Register and login.
