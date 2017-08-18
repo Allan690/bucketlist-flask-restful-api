@@ -1,5 +1,8 @@
 # Bucketlist-Flask-Restful-API
 
+[![Build Status](https://travis-ci.org/iankigen/Bucketlist-Flask-RESTful-API.svg?branch=develop)](https://travis-ci.org/iankigen/Bucketlist-Flask-RESTful-API)
+[![Coverage Status](https://coveralls.io/repos/github/iankigen/Bucketlist-Flask-RESTful-API/badge.svg?branch=develop)](https://coveralls.io/github/iankigen/Bucketlist-Flask-RESTful-API?branch=develop)
+
 A Flask RESTful API implementing Token Based Authentication, pagination and searching with Endpoints that enable users to:
 
 - Register and login.
@@ -36,11 +39,13 @@ Response header
   "content-type": "application/json"
 }
 ```
+## Testing API
 
 *Note* After user login, ensure you  specify the generated token in the header:
-```
-token: <token>
-```
+
+- In postman header **key** : `token` **value** : <token>
+- While testing on the browser, key in the `<token>` in Authorize header.
+
 ## Virtual environment
 
 Create a an isolated python environment for the API.
@@ -90,7 +95,7 @@ The API implements searching based on the name using a GET parameter *q* as show
 http://127.0.0.1:5000/bucketlist?q=example
 ```
 
-###Available Endpoints
+### Available Endpoints
 
 | Endpoint | Description |
 | ---- | --------------- |
@@ -107,3 +112,12 @@ http://127.0.0.1:5000/bucketlist?q=example
 | [DELETE /bucketlists/:id/items/:item_id](#) | Delete this single bucket list item. |
 | [GET /bucketlists?limit=10](#) | Get 10 bucket list records belonging to user. |
 | [GET /bucketlists?q=example](#) | Search for bucket lists with example in desc. |
+
+### Testing and API documentation
+
+[https://bucketlist-restful-api.herokuapp.com](https://bucketlist-restful-api.herokuapp.com)
+
+
+
+
+
