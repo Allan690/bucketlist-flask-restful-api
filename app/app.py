@@ -214,10 +214,12 @@ class BucketList(Resource):
         args = bucket_post_parser.parse_args()
         desc = args['desc']
 
+        print()
+
         if not desc:
             return {
                        'message': "Bucket list description cannot be empty!!."
-                   }, 204
+                   }, 400
 
         bucketlist = Bucketlist.query.filter_by(desc=desc).all()
 
