@@ -167,9 +167,9 @@ class BucketList(Resource):
         bucketlists = Bucketlist.query.filter_by(user_id=current_user.id).paginate(page, limit, error_out=False)
         if q:
             bucketlists = models.Bucketlist.query. \
-                filter(models.Bucketlist.desc.ilike('%' + q + '%')).all()
+                filter(models.Bucketlist.desc.ilike('%' + q + '%')).paginate(page, limit)
             if bucketlists:
-                for bucketlist in bucketlists:
+                for bucketlist in bucketlists.items:
                     buckets = {
                         'id': bucketlist.id,
                         'description': bucketlist.desc,
@@ -351,27 +351,7 @@ class BucketListItems(Resource):
                    }, 404
 
         output = []
-        if q:
-            bucketlist_items = models.BucketlistItems.query. \
-                filter(models.BucketlistItems.goal.ilike('%' + q + '%')).all()
-            if bucketlist_items:
-                for item in bucketlist_items:
-                    if str(id) == str(item.bucket_id):
-                        buckets = {
-                            'id': item.id,
-                            'goal': item.goal,
-                            "completed": item.status,
-                            "bucket list id": item.bucket_id
-                        }
-                        output.append(buckets)
 
-                if output:
-                    return {
-                               "Bucket lists": output
-                           }, 200
-            return {
-                       "message": "No results found!!"
-                   }, 404
 
         if page:
             try:
@@ -392,6 +372,28 @@ class BucketListItems(Resource):
                        }, 400
         else:
             limit = 5
+
+        if q:
+            bucketlist_items = models.BucketlistItems.query. \
+                filter(models.BucketlistItems.goal.ilike('%' + q + '%')).paginate(page, limit)
+            if bucketlist_items:
+                for item in bucketlist_items.items:
+                    if str(id) == str(item.bucket_id):
+                        buckets = {
+                            'id': item.id,
+                            'goal': item.goal,
+                            "completed": item.status,
+                            "bucket list id": item.bucket_id
+                        }
+                        output.append(buckets)
+
+                if output:
+                    return {
+                               "Bucket lists": output
+                           }, 200
+            return {
+                       "message": "No results found!!"
+                   }, 404
 
         bucketlist_item = BucketlistItems.query.filter_by(bucket_id=id).paginate(page, limit)
 
