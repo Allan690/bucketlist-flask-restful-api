@@ -26,7 +26,7 @@ class TestBucketlistOperations(BaseTestCase):
         self.assertEqual(req.status_code, 409)
 
         req = self.client().post('/bucketlist', headers=headers, data={})
-        self.assertEqual(req.status_code, 204)
+        self.assertEqual(req.status_code, 400)
 
     # ENDPOINT: GET '/bucketlist'
     def test_view_all_bucketlist(self):
