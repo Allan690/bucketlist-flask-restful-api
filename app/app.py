@@ -49,6 +49,7 @@ class UserLogin(Resource):
                        'name': user.name,
                        'id': user.id,
                        'token': token.decode('UTF-8'),
+                       'created_date': str(user.date_created),
                    }, 200
 
         return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
@@ -174,7 +175,9 @@ class BucketList(Resource):
                         'id': bucketlist.id,
                         'description': bucketlist.desc,
                         'completed': bucketlist.status,
-                        'user id': bucketlist.user_id
+                        'user id': bucketlist.user_id,
+                        'created_date': str(bucketlist.date_created),
+                        'modified_date': str(bucketlist.date_modified),
                     }
                     output.append(buckets)
 
@@ -192,11 +195,14 @@ class BucketList(Resource):
             }), 404
 
         for bucketlist in bucketlists.items:
+            print(bucketlist.date_created, "*"*100)
             buckets = {
                 'id': bucketlist.id,
                 'description': bucketlist.desc,
                 'completed': bucketlist.status,
-                'user id': bucketlist.user_id
+                'user id': bucketlist.user_id,
+                'created_date': str(bucketlist.date_created),
+                'modified_date': str(bucketlist.date_modified),
             }
             output.append(buckets)
         if not output:
@@ -213,8 +219,6 @@ class BucketList(Resource):
         '''Create a new bucketlist.'''
         args = bucket_post_parser.parse_args()
         desc = args['desc']
-
-        print()
 
         if not desc:
             return {
@@ -261,7 +265,9 @@ class SingleBucketList(Resource):
                        "id": bucketlist.id,
                        "description": bucketlist.desc,
                        "completed": bucketlist.status,
-                       "user id": bucketlist.user_id
+                       "user id": bucketlist.user_id,
+                       'created_date': str(bucketlist.date_created),
+                       'modified_date': str(bucketlist.date_modified),
                    }, 200
 
     @api.doc(parser=bucket_put_parser)
@@ -290,7 +296,7 @@ class SingleBucketList(Resource):
             if not desc:
                 return {
                            "message": "Description cannot be empty!!"
-                       }, 204
+                       }, 400
 
             bucketlist.status = status
             bucketlist.desc = desc
@@ -385,7 +391,9 @@ class BucketListItems(Resource):
                             'id': item.id,
                             'goal': item.goal,
                             "completed": item.status,
-                            "bucket list id": item.bucket_id
+                            "bucket list id": item.bucket_id,
+                            'date_created': str(item.date_created),
+                            'date_modified': str(item.date_modified),
                         }
                         output.append(buckets)
 
@@ -410,7 +418,9 @@ class BucketListItems(Resource):
                 "id": bucket_items.id,
                 "goal": bucket_items.goal,
                 "completed": bucket_items.status,
-                "bucket list id": bucket_items.bucket_id
+                "bucket list id": bucket_items.bucket_id,
+                'created_date': str(bucket_items.date_created),
+                'modified_date': str(bucket_items.date_modified),
             }
             bucketlist_items.append(bucket_item)
 
@@ -477,12 +487,14 @@ class SingleBucketListItem(Resource):
                            "message": "Bucketlist item does not exists!!"
                        }, 404
 
-            return jsonify({
+            return {
                 "id": bucket_item.id,
                 "goal": bucket_item.goal,
                 "completed": bucket_item.status,
-                "bucket list id": bucket_item.bucket_id
-            })
+                "bucket list id": bucket_item.bucket_id,
+                'created_date': str(bucket_item.date_created),
+                'modified_date': str(bucket_item.date_modified),
+            }
 
     def put(self, current_user, id, item_id=None):
         '''Update a given bucketlist item given its identifier.'''
