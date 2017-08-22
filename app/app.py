@@ -52,8 +52,6 @@ class UserLogin(Resource):
                        'created_date': str(user.date_created),
                    }, 200
 
-        return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
-
 
 parser = api.parser()
 parser.add_argument('name', type=str, help='Username', location='form')
@@ -92,7 +90,7 @@ class UserRegistration(Resource):
         if not name or not passwd:
             return {
                        "message": "Provide your name and password!!"
-                   }, 401
+                   }, 400
 
         hashed_password = generate_password_hash(passwd, method='sha256')
 
@@ -171,13 +169,30 @@ class BucketList(Resource):
                 filter(models.Bucketlist.desc.ilike('%' + q + '%')).paginate(page, limit)
             if bucketlists:
                 for bucketlist in bucketlists.items:
+
+                    bucketlist_item = BucketlistItems.query.filter_by(bucket_id=bucketlist.id)
+                    bucketlist_items = []
+                    for bucket_items in bucketlist_item:
+                        bucket_item = {
+                            "id": bucket_items.id,
+                            "goal": bucket_items.goal,
+                            "completed": bucket_items.status,
+                            "bucket list id": bucket_items.bucket_id,
+                            'created_date': str(bucket_items.date_created),
+                            'modified_date': str(bucket_items.date_modified),
+                        }
+                        bucketlist_items.append(bucket_item)
+
+                    if not bucketlist_items:
+                        bucketlist_items = "Not available at the moment."
+
                     buckets = {
                         'id': bucketlist.id,
                         'description': bucketlist.desc,
-                        'completed': bucketlist.status,
                         'user id': bucketlist.user_id,
                         'created_date': str(bucketlist.date_created),
                         'modified_date': str(bucketlist.date_modified),
+                        'items': bucketlist_items
                     }
                     output.append(buckets)
 
@@ -195,16 +210,32 @@ class BucketList(Resource):
             }), 404
 
         for bucketlist in bucketlists.items:
-            print(bucketlist.date_created, "*"*100)
+            bucketlist_item = BucketlistItems.query.filter_by(bucket_id=bucketlist.id)
+            bucketlist_items = []
+            for bucket_items in bucketlist_item:
+                bucket_item = {
+                    "id": bucket_items.id,
+                    "goal": bucket_items.goal,
+                    "completed": bucket_items.status,
+                    "bucket list id": bucket_items.bucket_id,
+                    'created_date': str(bucket_items.date_created),
+                    'modified_date': str(bucket_items.date_modified),
+                }
+                bucketlist_items.append(bucket_item)
+
+            if not bucketlist_items:
+                bucketlist_items = "Not available at the moment."
+
             buckets = {
                 'id': bucketlist.id,
                 'description': bucketlist.desc,
-                'completed': bucketlist.status,
                 'user id': bucketlist.user_id,
                 'created_date': str(bucketlist.date_created),
                 'modified_date': str(bucketlist.date_modified),
+                'items': bucketlist_items
             }
             output.append(buckets)
+
         if not output:
             return {
                        "message": "You don't have any bucket list at the moment!"
@@ -243,8 +274,6 @@ class BucketList(Resource):
 
 bucket_put_parser = api.parser()
 bucket_put_parser.add_argument('desc', type=str, help='Bucketlist Description', location='form')
-bucket_put_parser.add_argument('status', type=str, help='Bucket list completed? True/False', location='form')
-
 
 class SingleBucketList(Resource):
     '''Show a single bucketlist and lets you update or delete them.'''
@@ -261,6 +290,22 @@ class SingleBucketList(Resource):
                            'message': "Bucketlist does not exist!!"
                        }, 404
 
+            bucketlist_item = BucketlistItems.query.filter_by(bucket_id=bucketlist.id)
+            bucketlist_items = []
+            for bucket_items in bucketlist_item:
+                bucket_item = {
+                    "id": bucket_items.id,
+                    "goal": bucket_items.goal,
+                    "completed": bucket_items.status,
+                    "bucket list id": bucket_items.bucket_id,
+                    'created_date': str(bucket_items.date_created),
+                    'modified_date': str(bucket_items.date_modified),
+                }
+                bucketlist_items.append(bucket_item)
+
+            if not bucketlist_items:
+                bucketlist_items = "Not available at the moment."
+
             return {
                        "id": bucketlist.id,
                        "description": bucketlist.desc,
@@ -268,6 +313,7 @@ class SingleBucketList(Resource):
                        "user id": bucketlist.user_id,
                        'created_date': str(bucketlist.date_created),
                        'modified_date': str(bucketlist.date_modified),
+                        'items': bucketlist_items
                    }, 200
 
     @api.doc(parser=bucket_put_parser)
@@ -276,7 +322,6 @@ class SingleBucketList(Resource):
         if id:
             args = bucket_put_parser.parse_args()
             desc = args['desc']
-            status = args['status']
 
             bucketlist = Bucketlist.query.filter_by(id=id, user_id=current_user.id).first()
 
@@ -284,21 +329,12 @@ class SingleBucketList(Resource):
                 return {
                            "message": "Bucketlist does not exist!!"
                        }, 404
-            status = False
-
-            if status == "True":
-                bucketlist_item = BucketlistItems.query.filter_by(bucket_id=id).all()
-                status = True
-                for item in bucketlist_item:
-                    if not item.status:
-                        status = False
 
             if not desc:
                 return {
                            "message": "Description cannot be empty!!"
                        }, 400
 
-            bucketlist.status = status
             bucketlist.desc = desc
             bucketlist.user_id = current_user.id
             db.session.commit()
