@@ -17,7 +17,8 @@ app = Flask(__name__)
 api = Api(app, version='1.0',
           authorizations=authorization,
           title='Bucketlist API',
-          description='Bucketlist RESTful API using Flask with Endpoints.',)
+          description='Bucketlist RESTful API using Flask with Endpoints.',
+          prefix='/api/v1')
 
 app.config.from_object(app_config['staging'])
 
