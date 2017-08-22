@@ -3,6 +3,4 @@
 app/__pycache__/
 app/decorators/__pycache__/
 config/__pycache__/
-config/app.db
-migrations/
 tests/__pycache__/
