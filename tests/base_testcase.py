@@ -28,5 +28,10 @@ class BaseTestCase(unittest.TestCase):
             db.drop_all()
             db.session.commit()
 
+    def authenticate(self):
+        self.client().post('/api/v1/auth/register', data=self.user)
+        req = self.client().post('/api/v1/auth/login', data=self.user)
+        return req
+
 if __name__ == "__main__":
     unittest.main()
