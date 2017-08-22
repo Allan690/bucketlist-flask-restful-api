@@ -3,4 +3,5 @@
 app/__pycache__/
 app/decorators/__pycache__/
 config/__pycache__/
+migrations/versions/__pycache__/
 tests/__pycache__/
