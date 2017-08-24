@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 895a5059c38d
+Revision ID: ec6b14e34790
 Revises: 
-Create Date: 2017-08-17 11:57:59.455316
+Create Date: 2017-08-22 13:30:52.327319
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '895a5059c38d'
+revision = 'ec6b14e34790'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,6 +23,8 @@ def upgrade():
     sa.Column('public_id', sa.String(length=50), nullable=True),
     sa.Column('name', sa.String(length=80), nullable=True),
     sa.Column('password', sa.String(length=80), nullable=True),
+    sa.Column('date_created', sa.DateTime(), nullable=True),
+    sa.Column('date_modified', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name'),
     sa.UniqueConstraint('public_id')
@@ -32,6 +34,8 @@ def upgrade():
     sa.Column('desc', sa.String(length=50), nullable=True),
     sa.Column('status', sa.Boolean(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('date_created', sa.DateTime(), nullable=True),
+    sa.Column('date_modified', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('desc')
@@ -48,6 +52,8 @@ def upgrade():
     sa.Column('goal', sa.String(length=50), nullable=True),
     sa.Column('status', sa.Boolean(), nullable=True),
     sa.Column('bucket_id', sa.Integer(), nullable=True),
+    sa.Column('date_created', sa.DateTime(), nullable=True),
+    sa.Column('date_modified', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['bucket_id'], ['bucketlist.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('goal')
