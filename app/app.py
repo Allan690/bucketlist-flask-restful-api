@@ -7,8 +7,8 @@ from app import api, app, Resource, User, db, Session, Bucketlist, models, Bucke
 from app.decorators import token_required
 
 login_parser = api.parser()
-login_parser.add_argument('name', type=str, help='Username', location='form', required=True)
-login_parser.add_argument('password', type=str, help='Password', location='form', required=True)
+login_parser.add_argument('name', type=str, help='Username', required=True)
+login_parser.add_argument('password', type=str, help='Password', required=True)
 
 
 class UserLogin(Resource):
@@ -54,8 +54,8 @@ class UserLogin(Resource):
 
 
 parser = api.parser()
-parser.add_argument('name', type=str, help='Username', location='form')
-parser.add_argument('password', type=str, help='Password', location='form')
+parser.add_argument('name', type=str, help='Username')
+parser.add_argument('password', type=str, help='Password')
 
 
 class UserLogout(Resource):
@@ -119,7 +119,7 @@ bucket_post_parser = api.parser()
 bucket_get_parser.add_argument('page', type=int, help='Page number, default=1')
 bucket_get_parser.add_argument('limit', type=int, help='Limit per page, default=5')
 bucket_get_parser.add_argument('q', type=str, help='Search')
-bucket_post_parser.add_argument('desc', type=str, help='Bucketlist Description', location='form')
+bucket_post_parser.add_argument('desc', type=str, help='Bucketlist Description')
 
 
 class BucketList(Resource):
@@ -273,7 +273,7 @@ class BucketList(Resource):
 
 
 bucket_put_parser = api.parser()
-bucket_put_parser.add_argument('desc', type=str, help='Bucketlist Description', location='form')
+bucket_put_parser.add_argument('desc', type=str, help='Bucketlist Description')
 
 class SingleBucketList(Resource):
     '''Show a single bucketlist and lets you update or delete them.'''
@@ -371,7 +371,7 @@ bucket_item_get_parser.add_argument('page', type=int, help='Page number, default
 bucket_item_get_parser.add_argument('limit', type=int, help='Limit per page, default=5')
 bucket_item_get_parser.add_argument('q', type=str, help='Search')
 
-bucket_item_post_parser.add_argument('goal', type=str, help='Bucketlist Item name', location='form')
+bucket_item_post_parser.add_argument('goal', type=str, help='Bucketlist Item name')
 
 
 class BucketListItems(Resource):
